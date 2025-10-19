@@ -1,0 +1,16 @@
+name: Scheduled Tasks
+
+on:
+  schedule:
+    # Runs every day at 12:00 PM UTC
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allows you to run it manually
+
+jobs:
+  daily_task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print current date and message
+        run: |
+          echo "✅ Scheduled job running successfully!"
+          date
