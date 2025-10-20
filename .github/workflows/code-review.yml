@@ -1,30 +1,31 @@
 name: Code Review Workflow
 
 on:
-  pull_request:
-    branches: [main]
-  workflow_dispatch:   # 👈 This line allows manual triggering
+  workflow_dispatch:   # allows manual run
+  pull_request:        # optional trigger when PRs are created
+    branches: [ main ]
+
 jobs:
-  code-review:
+  codeql-analysis:
+    name: Analyze code quality and security
     runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          node-version: '18'
+          languages: javascript   # or python, cpp, etc. depending on your project
 
-      - name: Install dependencies
-        run: npm install
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
 
-      - name: Run ESLint (code style check)
-        run: |
-          npx eslint . || echo "Linting completed with warnings"
-
-      - name: Run CodeQL Analysis (security scan)
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: 'security'
