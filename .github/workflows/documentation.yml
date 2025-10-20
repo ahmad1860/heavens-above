@@ -16,19 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install || echo "No npm packages found"
-
       - name: Generate documentation folder
         run: |
           mkdir -p docs
-          cp README.md docs/index.md
-          echo "<meta http-equiv='refresh' content='0; url=./index.md'>" > docs/index.html
+          echo "<html><body><h1>Project Documentation</h1><p>See <a href='https://github.com/${{ github.repository }}'>GitHub Repo</a></p></body></html>" > docs/index.html
           touch docs/.nojekyll
           echo "Documentation folder prepared."
 
