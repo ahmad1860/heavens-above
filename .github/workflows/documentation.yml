@@ -1,0 +1,38 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # allows manual run too
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate documentation
+        run: |
+          mkdir docs
+          cp README.md docs/index.md
+          echo "<meta http-equiv='refresh' content='0; url=./index.md'>" > docs/index.html
+          echo "Documentation generated successfully."
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
